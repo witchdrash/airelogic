@@ -8,21 +8,30 @@ namespace LyricInfoApi.Controllers
     [Route("[controller]")]
     public class ArtistsController : ControllerBase
     {
-        [HttpPost("search")]
-        public IEnumerable<Artist> Search(string artistName)
+        private readonly IArtistRepository _artistRepository;
+
+        public ArtistsController(IArtistRepository artistRepository)
         {
-            return new []{ new Artist(artistName, null), };
+            _artistRepository = artistRepository;
+        }
+        
+        [HttpPost("search")]
+        public ICollection<Artist> Search(string artistName)
+        {
+            return _artistRepository.SearchFor(artistName);
         }
     }
 
-    public class Artist
+    public interface IArtistRepository
     {
-        public Artist(string name, string id)
+        ICollection<Artist> SearchFor(string artistName);
+    }
+
+    public class ArtistRepository : IArtistRepository
+    {
+        public ICollection<Artist> SearchFor(string artistName)
         {
-            Name = name;
-            Id = id;
+            return null;
         }
-        public string Id { get; }
-        public string Name { get; }
     }
 }
