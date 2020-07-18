@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using LyricInfoApi.Models;
@@ -15,17 +16,15 @@ namespace LyricInfoApi.Repositories
         }
         public ICollection<Artist> SearchFor(string artistName)
         {
-            var client = _clientFactory.CreateClient();
+            var client = _clientFactory.CreateClient(HttpMethod.Get, $"http://musicbrainz.org/ws/2/artist/?query=artist:{artistName}");
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"http://musicbrainz.org/ws/2/artist/?query=artist:{artistName}");
-
-            return client.GetResponse<MusicBrainzArtistsCollection>(request).Artists;
+            return client.GetResponse<MusicBrainzArtistsCollection>().Artists;
         }
     }
 
     public interface IHttpClientFactoryWrapper
     {
-        IHttpClientWrapper CreateClient();
+        IHttpClientWrapper CreateClient(HttpMethod get, string s);
     }
 
     public class HttpClientFactoryWrapper : IHttpClientFactoryWrapper
@@ -37,32 +36,33 @@ namespace LyricInfoApi.Repositories
             this._clientFactory = _clientFactory;
         }
 
-        public IHttpClientWrapper CreateClient()
+        public IHttpClientWrapper CreateClient(HttpMethod httpMethod, string url)
         {
-            return new HttpClientWrapper(_clientFactory.CreateClient());
+            return new HttpClientWrapper(_clientFactory.CreateClient(), httpMethod, url);
         }
     }
 
     public interface IHttpClientWrapper
     {
-        T GetResponse<T>(HttpRequestMessage request);
+        T GetResponse<T>();
     }
 
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private readonly HttpClient _createClient;
+        private HttpRequestMessage _request;
 
-        public HttpClientWrapper(HttpClient createClient)
+        public HttpClientWrapper(HttpClient createClient, HttpMethod httpMethod, string url)
         {
             _createClient = createClient;
+            _request = new HttpRequestMessage(httpMethod, url);
+            _request.Headers.Add("User-Agent", "AireLogicTechnicalTest/0.0.1");
+            _request.Headers.Add("Accept", "application/json");
         }
 
-        public T GetResponse<T>(HttpRequestMessage request)
+        public T GetResponse<T>()
         {
-            request.Headers.Add("User-Agent", "AireLogicTechnicalTest/0.0.1");
-            request.Headers.Add("Accept", "application/json");
-
-            var response = _createClient.SendAsync(request).Result;
+            var response = _createClient.SendAsync(_request).Result;
 
             return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result,
                 new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
