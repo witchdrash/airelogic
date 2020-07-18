@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LyricInfoApi.Controllers;
 using LyricInfoApi.Repositories;
 using LyricInfoApi.Services;
+using LyricInfoApi.Wrappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;

@@ -3,6 +3,7 @@ using System.Net.Http;
 using LyricInfoApi.Models;
 using LyricInfoApi.Repositories;
 using LyricInfoApi.Services;
+using LyricInfoApi.Wrappers;
 using Moq;
 using Xunit;
 
