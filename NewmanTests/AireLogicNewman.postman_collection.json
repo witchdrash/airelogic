@@ -1,0 +1,51 @@
+{
+	"info": {
+		"_postman_id": "9e94b16d-079b-4a56-aaeb-abe28f96030e",
+		"name": "AireLogicNewman",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://localhost:5000/artists/search?artistName=bob",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b48de0cb-204a-439b-acd2-60522ce69f4e",
+						"exec": [
+							"pm.test(\"debug test to confirm basic boiler plate is correct\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    let body = pm.response.json();\r",
+							"    pm.expect(body[0].name).to.eql(\"bob\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:5000/artists/search?artistName=bob",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"artists",
+						"search"
+					],
+					"query": [
+						{
+							"key": "artistName",
+							"value": "bob"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

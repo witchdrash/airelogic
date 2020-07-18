@@ -1,0 +1,23 @@
+{
+  "name": "airelogictechnicaltest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"newman" : "newman run ./NewmanTests/AireLogicNewman.postman_collection.json --reporters cli"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/witchdrash/airelogic.git"
+  },
+  "author": "Owen Ashcroft",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/witchdrash/airelogic/issues"
+  },
+  "homepage": "https://github.com/witchdrash/airelogic#readme",
+  "devDependencies": {
+    "newman": "^5.1.2"
+  }
+}
