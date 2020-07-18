@@ -33,6 +33,7 @@ namespace LyricInfoApi
             services.AddHttpClient();
             
             services.AddSingleton<IArtistRepository, ArtistRepository>();
+            services.AddSingleton<ILyricStatisticsService, LyricStatisticsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

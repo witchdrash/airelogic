@@ -19,10 +19,27 @@ namespace LyricInfoApi.Test
             
             artistRepo.Setup(x => x.SearchFor(expected[0].Name)).Returns(expected);
             
-            var classUnderTest = new ArtistsController(artistRepo.Object);
+            var classUnderTest = new ArtistsController(artistRepo.Object, null);
             
             var result = classUnderTest.Search(expected[0].Name);
             Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void WhenRequestingDataForASpecificArtistThatIsValidTheCorrectDataIsExpectedDataIsReturned()
+        {
+
+            var expected = new LyricStatistics {For = "1234-ABCD", AverageLyricsPerSong = 123.47m};
+            
+            var lyricStatisticsService = new Mock<ILyricStatisticsService>();
+            lyricStatisticsService.Setup(x => x.CalculateFor(expected.For)).Returns(expected);
+            
+            var classUnderTest = new ArtistsController(null, lyricStatisticsService.Object);
+
+            var result = classUnderTest.GetLyricStats(expected.For);
+            
+            Assert.Equal(expected, result);
+            
         }
     }
 }
