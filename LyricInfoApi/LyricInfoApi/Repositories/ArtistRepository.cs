@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using LyricInfoApi.Models;
 using LyricInfoApi.Wrappers;
