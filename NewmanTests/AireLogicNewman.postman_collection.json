@@ -21,11 +21,11 @@
 							"\r",
 							"    pm.expect(body[0].name).to.eql(\"Weezer\");\r",
 							"    pm.expect(body[0].id).to.eql(\"6fe07aa5-fec0-4eca-a456-f29bff451b04\");\r",
-							"    pm.expect(body[0].sortName).to.eql(\"Weezer\");\r",
+							"    pm.expect(body[0]['sort-name']).to.eql(\"Weezer\");\r",
 							"\r",
 							"    pm.expect(body[1].name).to.eql(\"Killa Weezer\");\r",
 							"    pm.expect(body[1].id).to.eql(\"2b8501a5-c66f-49d8-9b9e-44fa5803b7cc\");\r",
-							"    pm.expect(body[0].sortName).to.eql(\"Weezer, Killa\");\r",
+							"    pm.expect(body[1]['sort-name']).to.eql(\"Weezer, Killa\");\r",
 							"});"
 						],
 						"type": "text/javascript"
