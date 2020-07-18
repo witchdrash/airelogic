@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using LyricInfoApi.Models;
@@ -21,7 +22,7 @@ namespace LyricInfoApi.Repositories
             return client.GetResponse<MusicBrainzArtistsCollection>().Artists;
         }
 
-        public ICollection<Works> GetWorksFor(string artistId)
+        public WorksCollection GetWorksFor(string artistId)
         {
             var currentOffset = 0;
             var getNextPage = true;
@@ -52,7 +53,31 @@ namespace LyricInfoApi.Repositories
                 }
             }
 
-            return toReturn;
+            var artistName = "";
+            
+            if (toReturn.All(x => string.IsNullOrEmpty(x.Disambiguation)))
+            {
+                Thread.Sleep(1000);  // Avoid the rate limiter and banning
+                var artistData = _clientFactory.CreateClient(HttpMethod.Get, $"http://musicbrainz.org/ws/2/artist/{artistId}");
+                var response = artistData.GetResponse<Artist>();
+                artistName = response.Name;
+            }
+            else
+            {
+                artistName = toReturn.First(x => !string.IsNullOrEmpty(x.Disambiguation)).Disambiguation;
+            }
+            
+            return new WorksCollection
+            {
+                ArtistName = artistName,
+                Works = toReturn
+            };
         }
+    }
+
+    public class WorksCollection
+    {
+        public string ArtistName { get; set; }
+        public ICollection<Works> Works { get; set; }
     }
 }

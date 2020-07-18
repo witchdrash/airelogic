@@ -4,6 +4,6 @@ namespace LyricInfoApi.Services
 {
     public interface ILyricStatisticsService
     {
-        LyricStatistics CalculateFor(string expectedFor);
+        LyricStatistics CalculateFor(string artistId);
     }
 }

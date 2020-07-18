@@ -14,7 +14,7 @@ namespace LyricInfoApi.Test
         [Fact]
         public void WhenSearchingForAValidArtistThatReturnsOnlyTheSingleEntryTheExpectedValuesAreReturned()
         {
-            var expected = new[] {new Artist("testy", "123")};
+            var expected = new[] {new Artist { Name = "testy", Id = "123" }};
             
             var artistRepo = new Mock<IArtistRepository>();
             
@@ -30,7 +30,7 @@ namespace LyricInfoApi.Test
         public void WhenRequestingDataForASpecificArtistThatIsValidTheCorrectDataIsExpectedDataIsReturned()
         {
 
-            var expected = new LyricStatistics {For = "1234-ABCD", AverageLyricsPerSong = 123.47m};
+            var expected = new LyricStatistics {For = "1234-ABCD", AverageLyricsPerSong = 123.47};
             
             var lyricStatisticsService = new Mock<ILyricStatisticsService>();
             lyricStatisticsService.Setup(x => x.CalculateFor(expected.For)).Returns(expected);

@@ -6,5 +6,6 @@ namespace LyricInfoApi.Repositories
     public interface IArtistRepository
     {
         ICollection<Artist> SearchFor(string artistName);
+        WorksCollection GetWorksFor(string artistId);
     }
 }

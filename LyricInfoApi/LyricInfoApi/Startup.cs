@@ -37,6 +37,7 @@ namespace LyricInfoApi
             services.AddTransient<IArtistRepository, ArtistRepository>();
             services.AddTransient<ILyricStatisticsService, LyricStatisticsService>();
             services.AddTransient<IHttpClientFactoryWrapper, HttpClientFactoryWrapper>();
+            services.AddTransient<ILyricsRepository, LyricsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

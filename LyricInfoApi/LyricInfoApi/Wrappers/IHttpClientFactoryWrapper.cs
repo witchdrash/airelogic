@@ -4,6 +4,6 @@ namespace LyricInfoApi.Wrappers
 {
     public interface IHttpClientFactoryWrapper
     {
-        IHttpClientWrapper CreateClient(HttpMethod get, string s);
+        IHttpClientWrapper CreateClient(HttpMethod httpMethod, string url);
     }
 }
