@@ -20,4 +20,9 @@ namespace LyricInfoApi.Models
         [JsonPropertyName("sort-name")]
         public string SortName { get;set; }
     }
+
+    public class LyricsApiResponse
+    {
+        public string Lyrics { get; set; }
+    }
 }
