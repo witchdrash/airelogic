@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Net.Http;
 using LyricInfoApi.Models;
 using LyricInfoApi.Repositories;
@@ -10,13 +11,57 @@ namespace LyricInfoApi.Test
 {
     public class TestArtistRepository
     {
+        
         [Fact]
         public void WhenSearchingForWorksWithAnInvalidIdNullIsReturned()
         {
+            const string artistId = "invalid";
+            
+            var httpClientWrapper = new Mock<IHttpClientWrapper>();
+            httpClientWrapper.Setup(x => x.GetResponse<MusicBrainzArtistWorksCollection>()).Returns(default(MusicBrainzArtistWorksCollection));
+            
             var httpClientFactory = new Mock<IHttpClientFactoryWrapper>();
-            //httpClientFactory.Setup(x => x.CreateClient()).Returns(new Mock<)
+            httpClientFactory
+                .Setup(x => x.CreateClient(HttpMethod.Get,
+                    $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=0"))
+                .Returns(httpClientWrapper.Object);
             
             var classUnderTest = new ArtistRepository(httpClientFactory.Object);
+            var result = classUnderTest.GetWorksFor(artistId);
+            
+            Assert.Null(result);
+        }
+        
+        [Fact]
+        public void WhenSearchingForAWorksThatIsValidAndDoesntReturnMoreThan100TheExpectedValueIsReturned()
+        {
+            const string artistId = "6fe07aa5-fec0-4eca";
+            
+            var expected = new List<Works>
+            {
+                new Works
+                {
+                    Id = "the id",
+                    Name = "Some Song"
+                }
+            };
+            
+            
+            var httpClientWrapper = new Mock<IHttpClientWrapper>();
+            
+            httpClientWrapper.Setup(x => x.GetResponse<MusicBrainzArtistWorksCollection>())
+                .Returns(new MusicBrainzArtistWorksCollection {Works = expected, WorkCount = 1, WorkOffset = 0 });
+            
+            var httpClientFactory = new Mock<IHttpClientFactoryWrapper>();
+            httpClientFactory
+                .Setup(x => x.CreateClient(HttpMethod.Get,
+                    $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=0"))
+                .Returns(httpClientWrapper.Object);
+            
+            var classUnderTest = new ArtistRepository(httpClientFactory.Object);
+            var result = classUnderTest.GetWorksFor(artistId);
+            
+            Assert.Equal(expected, result);
         }
 
         [Fact]

@@ -6,7 +6,7 @@ namespace LyricInfoApi.Wrappers
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private readonly HttpClient _createClient;
-        private HttpRequestMessage _request;
+        private readonly HttpRequestMessage _request;
 
         public HttpClientWrapper(HttpClient createClient, HttpMethod httpMethod, string url)
         {
