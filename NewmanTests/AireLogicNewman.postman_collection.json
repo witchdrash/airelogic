@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "https://localhost:5000/artists/search?artistName=bob",
+			"name": "Search for Weezer",
 			"event": [
 				{
 					"listen": "test",
@@ -36,7 +36,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "localhost:5000/artists/search?artistName=bob",
+					"raw": "localhost:5000/artists/search?artistName=weezer",
 					"host": [
 						"localhost"
 					],
@@ -48,7 +48,7 @@
 					"query": [
 						{
 							"key": "artistName",
-							"value": "bob"
+							"value": "weezer"
 						}
 					]
 				}
