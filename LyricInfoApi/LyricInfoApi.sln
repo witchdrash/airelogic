@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyricInfoApi", "LyricInfoApi\LyricInfoApi.csproj", "{817E7F6C-4C96-4775-8E94-5DA04BADADB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyricInfoApi.Test", "LyricInfoApi.Test\LyricInfoApi.Test.csproj", "{A8DB044C-ADD6-45AE-905B-988F8D5C2D4C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{817E7F6C-4C96-4775-8E94-5DA04BADADB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{817E7F6C-4C96-4775-8E94-5DA04BADADB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{817E7F6C-4C96-4775-8E94-5DA04BADADB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{817E7F6C-4C96-4775-8E94-5DA04BADADB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8DB044C-ADD6-45AE-905B-988F8D5C2D4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8DB044C-ADD6-45AE-905B-988F8D5C2D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8DB044C-ADD6-45AE-905B-988F8D5C2D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8DB044C-ADD6-45AE-905B-988F8D5C2D4C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
