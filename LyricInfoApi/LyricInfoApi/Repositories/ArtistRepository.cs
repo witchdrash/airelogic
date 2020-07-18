@@ -22,8 +22,7 @@ namespace LyricInfoApi.Repositories
 
         public ICollection<Works> GetWorksFor(string artistId)
         {
-            var client = _clientFactory.CreateClient(HttpMethod.Get,
-                $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=0");
+            var client = _clientFactory.CreateClient(HttpMethod.Get, $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=0");
             var result = client.GetResponse<MusicBrainzArtistWorksCollection>();
 
             return result?.Works;
