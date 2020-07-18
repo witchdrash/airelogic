@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using LyricInfoApi.Models;
 using LyricInfoApi.Wrappers;
 
@@ -22,10 +23,36 @@ namespace LyricInfoApi.Repositories
 
         public ICollection<Works> GetWorksFor(string artistId)
         {
-            var client = _clientFactory.CreateClient(HttpMethod.Get, $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=0");
-            var result = client.GetResponse<MusicBrainzArtistWorksCollection>();
+            var currentOffset = 0;
+            var getNextPage = true;
 
-            return result?.Works;
+            var toReturn = new List<Works>();
+            
+            while (getNextPage)
+            {
+                var client = _clientFactory.CreateClient(HttpMethod.Get,
+                    $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset={currentOffset}");
+                var result = client.GetResponse<MusicBrainzArtistWorksCollection>();
+                if (result == null)
+                {
+                    return null;
+                }
+                
+                toReturn.AddRange(result.Works);
+                if (currentOffset + 100 > result.WorkCount)
+                {
+                    getNextPage = false;
+                }
+                
+                currentOffset+=100;
+
+                if (getNextPage)
+                {
+                    Thread.Sleep(1000); // Avoid the rate limiter and banning
+                }
+            }
+
+            return toReturn;
         }
     }
 }

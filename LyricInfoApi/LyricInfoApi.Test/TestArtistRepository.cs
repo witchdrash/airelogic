@@ -1,5 +1,6 @@
+using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Linq;
 using System.Net.Http;
 using LyricInfoApi.Models;
 using LyricInfoApi.Repositories;
@@ -46,7 +47,6 @@ namespace LyricInfoApi.Test
                 }
             };
             
-            
             var httpClientWrapper = new Mock<IHttpClientWrapper>();
             
             httpClientWrapper.Setup(x => x.GetResponse<MusicBrainzArtistWorksCollection>())
@@ -64,6 +64,104 @@ namespace LyricInfoApi.Test
             Assert.Equal(expected, result);
         }
 
+        [Fact]
+        public void WhenSearchingForWorksAndThereAreMoreThan100RepeatedRequestsAreMadeAndTheEndResultIsAggregated()
+        {
+            const string artistId = "6fe07aa5-fec0-4eca";
+
+            var page1 = new Works
+            {
+                Id = "the id",
+                Name = "Some Song"
+            };
+            var page2 = new Works
+            {
+                Id = "second page",
+                Name = "another song that's on a different page"
+            };
+            var expected = new List<Works>
+            {
+                page1,
+                page2
+            };
+            
+            var httpClientWrapperPage1 = new Mock<IHttpClientWrapper>();
+            
+            httpClientWrapperPage1.Setup(x => x.GetResponse<MusicBrainzArtistWorksCollection>())
+                .Returns(new MusicBrainzArtistWorksCollection {Works = new List<Works> { page1 }, WorkCount = 101, WorkOffset = 0 });
+            
+            var httpClientWrapperPage2 = new Mock<IHttpClientWrapper>();
+            httpClientWrapperPage2.Setup(x => x.GetResponse<MusicBrainzArtistWorksCollection>())
+                .Returns(new MusicBrainzArtistWorksCollection {Works = new List<Works> { page2 }, WorkCount = 101, WorkOffset = 100 });
+            
+            var httpClientFactory = new Mock<IHttpClientFactoryWrapper>();
+            httpClientFactory
+                .Setup(x => x.CreateClient(HttpMethod.Get,
+                    $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=0"))
+                .Returns(httpClientWrapperPage1.Object);
+            
+            httpClientFactory
+                .Setup(x => x.CreateClient(HttpMethod.Get,
+                    $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=100"))
+                .Returns(httpClientWrapperPage2.Object);
+            
+            var classUnderTest = new ArtistRepository(httpClientFactory.Object);
+            var result = classUnderTest.GetWorksFor(artistId);
+            
+            Assert.Collection(result, 
+                item => Assert.Equal(page1, item), 
+                item => Assert.Equal(page2, item));
+        }
+
+        [Fact]
+        public void WhenHittingTheApiRepeatedlySlowCallsToEnsureWereNotBannedByTheRateLimiter()
+        {
+            const string artistId = "6fe07aa5-fec0-4eca";
+
+            var workData = new Works
+            {
+                Id = "the id",
+                Name = "Some Song"
+            };
+            
+            var httpClientWrapperPage1 = new Mock<IHttpClientWrapper>();
+            
+            httpClientWrapperPage1.Setup(x => x.GetResponse<MusicBrainzArtistWorksCollection>())
+                .Returns(new MusicBrainzArtistWorksCollection {Works = new List<Works> { workData }, WorkCount = 201, WorkOffset = 0 });
+            
+            var httpClientWrapperPage2 = new Mock<IHttpClientWrapper>();
+            httpClientWrapperPage2.Setup(x => x.GetResponse<MusicBrainzArtistWorksCollection>())
+                .Returns(new MusicBrainzArtistWorksCollection {Works = new List<Works> { workData }, WorkCount = 201, WorkOffset = 100 });
+            
+            var httpClientWrapperPage3 = new Mock<IHttpClientWrapper>();
+            httpClientWrapperPage2.Setup(x => x.GetResponse<MusicBrainzArtistWorksCollection>())
+                .Returns(new MusicBrainzArtistWorksCollection {Works = new List<Works> { workData }, WorkCount = 201, WorkOffset = 200 });
+            
+            var httpClientFactory = new Mock<IHttpClientFactoryWrapper>();
+            httpClientFactory
+                .Setup(x => x.CreateClient(HttpMethod.Get,
+                    $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=0"))
+                .Returns(httpClientWrapperPage1.Object);
+            
+            httpClientFactory
+                .Setup(x => x.CreateClient(HttpMethod.Get,
+                    $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=100"))
+                .Returns(httpClientWrapperPage2.Object);
+            
+            httpClientFactory
+                .Setup(x => x.CreateClient(HttpMethod.Get,
+                    $"http://musicbrainz.org/ws/2/work?artist={artistId}&limit=100&offset=200"))
+                .Returns(httpClientWrapperPage2.Object);
+            
+            var classUnderTest = new ArtistRepository(httpClientFactory.Object);
+
+            var start = DateTime.Now;
+            classUnderTest.GetWorksFor(artistId);
+            var end = DateTime.Now.Subtract(start);
+            
+            Assert.True(end.TotalMilliseconds > 2000, $"Should be at least 2000 ms was {end.TotalMilliseconds}");
+        }
+        
         [Fact]
         public void WhenSearchingForArtistsTheExpectedValueIsReturned()
         {
