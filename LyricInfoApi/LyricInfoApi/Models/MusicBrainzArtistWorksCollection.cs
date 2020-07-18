@@ -11,9 +11,4 @@ namespace LyricInfoApi.Models
         [JsonPropertyName("work-offset")]
         public int WorkOffset { get; set; }
     }
-
-    public class MusicBrainzArtistInfo
-    {
-        public Artist Artist { get; set; }
-    }
 }
