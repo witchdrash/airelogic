@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using LyricInfoApi.Controllers;
+using LyricInfoApi.Models;
+using LyricInfoApi.Services;
 using Moq;
 using Xunit;
 

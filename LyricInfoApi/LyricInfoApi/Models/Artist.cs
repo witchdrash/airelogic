@@ -1,4 +1,4 @@
-namespace LyricInfoApi.Controllers
+namespace LyricInfoApi.Models
 {
     public class Artist
     {

@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Permissions;
+using LyricInfoApi.Models;
+using LyricInfoApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LyricInfoApi.Controllers
@@ -19,19 +21,6 @@ namespace LyricInfoApi.Controllers
         public ICollection<Artist> Search(string artistName)
         {
             return _artistRepository.SearchFor(artistName);
-        }
-    }
-
-    public interface IArtistRepository
-    {
-        ICollection<Artist> SearchFor(string artistName);
-    }
-
-    public class ArtistRepository : IArtistRepository
-    {
-        public ICollection<Artist> SearchFor(string artistName)
-        {
-            return null;
         }
     }
 }
