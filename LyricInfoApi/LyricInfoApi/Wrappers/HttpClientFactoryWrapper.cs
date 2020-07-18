@@ -6,9 +6,9 @@ namespace LyricInfoApi.Wrappers
     {
         private readonly IHttpClientFactory _clientFactory;
 
-        public HttpClientFactoryWrapper(IHttpClientFactory _clientFactory)
+        public HttpClientFactoryWrapper(IHttpClientFactory clientFactory)
         {
-            this._clientFactory = _clientFactory;
+            _clientFactory = clientFactory;
         }
 
         public IHttpClientWrapper CreateClient(HttpMethod httpMethod, string url)
