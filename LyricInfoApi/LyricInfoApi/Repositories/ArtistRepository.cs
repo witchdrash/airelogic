@@ -7,9 +7,9 @@ namespace LyricInfoApi.Repositories
 {
     public class ArtistRepository : IArtistRepository
     {
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly IHttpClientFactoryWrapper _clientFactory;
 
-        public ArtistRepository(IHttpClientFactory clientFactory)
+        public ArtistRepository(IHttpClientFactoryWrapper clientFactory)
         {
             _clientFactory = clientFactory;
         }
@@ -18,14 +18,54 @@ namespace LyricInfoApi.Repositories
             var client = _clientFactory.CreateClient();
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"http://musicbrainz.org/ws/2/artist/?query=artist:{artistName}");
+
+            return client.GetResponse<MusicBrainzArtistsCollection>(request).Artists;
+        }
+    }
+
+    public interface IHttpClientFactoryWrapper
+    {
+        IHttpClientWrapper CreateClient();
+    }
+
+    public class HttpClientFactoryWrapper : IHttpClientFactoryWrapper
+    {
+        private readonly IHttpClientFactory _clientFactory;
+
+        public HttpClientFactoryWrapper(IHttpClientFactory _clientFactory)
+        {
+            this._clientFactory = _clientFactory;
+        }
+
+        public IHttpClientWrapper CreateClient()
+        {
+            return new HttpClientWrapper(_clientFactory.CreateClient());
+        }
+    }
+
+    public interface IHttpClientWrapper
+    {
+        T GetResponse<T>(HttpRequestMessage request);
+    }
+
+    public class HttpClientWrapper : IHttpClientWrapper
+    {
+        private readonly HttpClient _createClient;
+
+        public HttpClientWrapper(HttpClient createClient)
+        {
+            _createClient = createClient;
+        }
+
+        public T GetResponse<T>(HttpRequestMessage request)
+        {
             request.Headers.Add("User-Agent", "AireLogicTechnicalTest/0.0.1");
             request.Headers.Add("Accept", "application/json");
 
-            var response = client.SendAsync(request).Result;
+            var response = _createClient.SendAsync(request).Result;
 
-            var musicBrainzArtistsCollection = JsonSerializer.Deserialize<MusicBrainzArtistsCollection>(response.Content.ReadAsStringAsync().Result, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-            
-            return musicBrainzArtistsCollection.Artists;
+            return JsonSerializer.Deserialize<T>(response.Content.ReadAsStringAsync().Result,
+                new JsonSerializerOptions {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
         }
     }
 }
