@@ -30,6 +30,7 @@ namespace LyricInfoApi
             services.AddControllers();
             
             services.AddSwaggerGen();
+            services.AddHttpClient();
             
             services.AddSingleton<IArtistRepository, ArtistRepository>();
         }

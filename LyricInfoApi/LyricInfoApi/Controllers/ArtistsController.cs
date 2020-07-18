@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Security.Permissions;
 using LyricInfoApi.Models;
 using LyricInfoApi.Services;
 using Microsoft.AspNetCore.Mvc;
