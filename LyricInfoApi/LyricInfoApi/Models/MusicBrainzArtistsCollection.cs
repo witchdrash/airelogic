@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using LyricInfoApi.Models;
 
-namespace LyricInfoApi.Services
+namespace LyricInfoApi.Models
 {
     public class MusicBrainzArtistsCollection
     {

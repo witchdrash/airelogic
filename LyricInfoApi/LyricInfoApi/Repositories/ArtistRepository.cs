@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using LyricInfoApi.Models;
 
-namespace LyricInfoApi.Services
+namespace LyricInfoApi.Repositories
 {
     public class ArtistRepository : IArtistRepository
     {

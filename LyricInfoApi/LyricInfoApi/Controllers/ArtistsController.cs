@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using LyricInfoApi.Models;
+using LyricInfoApi.Repositories;
 using LyricInfoApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,13 +28,7 @@ namespace LyricInfoApi.Controllers
         [HttpGet("{id}")]
         public LyricStatistics GetLyricStats(string id)
         {
-            return null;
+            return _lyricStatisticsService.CalculateFor(id);
         }
-    }
-
-    public class LyricStatistics
-    {
-        public string For { get; set; }
-        public decimal AverageLyricsPerSong { get; set; }
     }
 }
