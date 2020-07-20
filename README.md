@@ -7,7 +7,7 @@ The tests can be executed from the command line as well by navigating to the `Ly
 
 There is a single newman test, this was to validate I was getting the artists out correctly, this can be run by using `npm run newman` you will need to run an `npm install` if you don't have newman installed globally.
 
-I would have added one for the other endpoint, since there was no direct acceptance criteria and I couldn't find an artists with few enough songs that manually calculating what the average should be wouldn't take an incredibly long time and be highly error prone, I was concerned adding one would simply retain a potentially buggy piece of code, which means the test produces negative value by giving a false green, and given that this was an excercise to demonstrate how I worked with APIs rather than being production code I decided against writing it.
+I would have added at least one more for the other endpoint, however since there was no direct acceptance criteria and I couldn't find an artists with few enough songs that manually calculating what the average should be wouldn't take an incredibly long time and be potentially error prone, I was concerned adding one would simply retain a potentially buggy piece of code, which means the test produces negative value by giving a false green, as well as having low confidence in a red result would be a genuine red, and given that this was an excercise to demonstrate how I worked with APIs rather than being production code I decided against writing it.
 
 # Use
 First step is to use the artist search api to find the artist id
